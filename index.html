@@ -1,450 +1,95 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#f4f6f8">
 <title>TCL Vision</title>
 <script src="https://accounts.google.com/gsi/client" async defer></script>
 <style>
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body {
-  font-family: Arial, sans-serif; color: #292d32;
-  background: linear-gradient(135deg, #ffffff, #f0f1f3);
-  min-height: 100vh; overflow-x: hidden;
-}
-header {
-  min-height: 100px; padding: 28px 5%; display: flex;
-  align-items: center; justify-content: space-between; gap: 20px;
-}
-.logo { font-size: 30px; font-weight: 800; letter-spacing: 2px; }
-.logo span { color: #858b94; font-weight: 400; }
-nav { display: flex; gap: 35px; color: #737982; font-size: 16px; }
-nav span.active {
-  color: #20242a; font-weight: bold;
-  border-bottom: 2px solid #777e88; padding-bottom: 8px;
-}
-main { padding: 20px 5% 60px; }
-.welcome { margin-bottom: 36px; }
-.welcome h1 { font-size: 32px; margin-bottom: 9px; }
-.welcome p { color: #858b94; font-size: 16px; }
-.section { margin-bottom: 42px; }
-.section-title {
-  display: flex; align-items: center; justify-content: space-between;
-  gap: 15px; margin-bottom: 20px;
-}
-.section-title h2 { font-size: 23px; font-weight: 700; }
-.section-title small { color: #8b919a; }
-.cards {
-  display: flex; gap: 18px; overflow-x: auto;
-  padding: 8px 5px 18px; scrollbar-width: none;
-}
-.cards::-webkit-scrollbar { display: none; }
-.card {
-  flex: 0 0 235px; min-height: 145px; border-radius: 15px;
-  background: linear-gradient(145deg, #ffffff, #e9ebee);
-  border: 1px solid #e0e2e5; box-shadow: 0 5px 18px #0000000b;
-  padding: 20px; display: flex; flex-direction: column;
-  justify-content: space-between; cursor: pointer; transition: .2s;
-}
-.card:focus, .card:hover, .card.selected,
-.continue-card:focus, .continue-card:hover, .continue-card.selected,
-.channel-card:focus, .channel-card:hover {
-  outline: 3px solid #777e88; transform: scale(1.025);
-}
-.card .number { font-size: 13px; color: #a0a5ac; }
-.card h3 { font-size: 19px; }
-.card p { font-size: 13px; color: #858b94; }
-.card.featured { background: linear-gradient(145deg, #ffffff, #e2e5e9); }
-.card.connect {
-  background: #e9ebee; border-style: dashed; align-items: center;
-  text-align: center; justify-content: center; gap: 12px;
-}
-.card.connect .plus { font-size: 30px; color: #747b85; }
-.continue-card {
-  flex: 0 0 260px; min-height: 150px; border-radius: 15px;
-  padding: 20px; background: #e9ebee; border: 1px solid #dfe1e5;
-  display: flex; flex-direction: column; justify-content: flex-end;
-  gap: 10px; cursor: pointer;
-}
-.continue-card p { font-size: 13px; color: #858b94; }
-.status {
-  margin-top: 14px; color: #737982; font-size: 14px;
-  line-height: 1.5; min-height: 22px;
-}
-.channel-card {
-  flex: 0 0 220px; min-height: 190px; border-radius: 15px;
-  padding: 18px; background: #fff; border: 1px solid #e0e2e5;
-  box-shadow: 0 5px 18px #0000000b; cursor: pointer;
-  display: flex; flex-direction: column; align-items: center;
-  justify-content: center; gap: 12px; text-align: center;
-  color: inherit; text-decoration: none; transition: .2s;
-}
-.channel-card img {
-  width: 76px; height: 76px; border-radius: 50%; object-fit: cover;
-  background: #e9ebee;
-}
-.channel-card h3 { font-size: 16px; line-height: 1.3; }
-.channel-card p { color: #858b94; font-size: 12px; }
-.action-button {
-  border: 0; border-radius: 10px; padding: 12px 18px;
-  background: #292d32; color: white; font-size: 14px;
-  cursor: pointer; margin-top: 12px;
-}
-.action-button:focus, .action-button:hover { outline: 3px solid #9ba1aa; }
-.action-button:disabled { opacity: .55; cursor: wait; }
-.hidden { display: none !important; }
-footer {
-  padding: 20px 5%; color: #9a9fa6; font-size: 12px;
-  border-top: 1px solid #e4e6e9;
-}
-@media(max-width:700px) {
-  header { height: auto; flex-wrap: wrap; gap: 20px; }
-  nav { gap: 15px; font-size: 13px; }
-  .welcome h1 { font-size: 25px; }
-  .section-title { align-items: flex-start; flex-direction: column; }
-}
-
-/* FASE 2 — melhorias para TV e controle remoto */
-html { scroll-behavior: smooth; }
-.card, .continue-card, .channel-card, .action-button {
-  -webkit-tap-highlight-color: transparent;
-  transition: transform .16s ease, outline-color .16s ease, box-shadow .16s ease;
-}
-.card:focus-visible, .continue-card:focus-visible,
-.channel-card:focus-visible, .action-button:focus-visible {
-  outline: 4px solid #647891;
-  outline-offset: 4px;
-  transform: scale(1.035);
-  box-shadow: 0 8px 28px #26364a22;
-}
-@media (min-width: 1000px) {
-  header { padding-top: 30px; padding-bottom: 24px; }
-  .logo { font-size: clamp(34px, 2.5vw, 48px); }
-  nav { font-size: clamp(17px, 1.2vw, 22px); }
-  main { padding-top: 30px; }
-  .welcome h1 { font-size: clamp(36px, 2.8vw, 52px); }
-  .welcome p { font-size: clamp(18px, 1.25vw, 22px); }
-  .status { font-size: clamp(15px, 1vw, 18px); }
-  .section-title h2 { font-size: clamp(25px, 1.8vw, 32px); }
-  .card { flex-basis: clamp(250px, 19vw, 340px); min-height: 185px; padding: 26px; }
-  .card h3 { font-size: clamp(20px, 1.5vw, 27px); }
-  .card p, .continue-card p { font-size: clamp(14px, 1vw, 18px); }
-  .continue-card { flex-basis: clamp(275px, 21vw, 370px); min-height: 190px; padding: 25px; }
-  .channel-card { flex-basis: clamp(230px, 17vw, 300px); min-height: 220px; }
-  .channel-card img { width: 90px; height: 90px; }
-  .channel-card h3 { font-size: clamp(17px, 1.2vw, 21px); }
-  .action-button { font-size: 16px; padding: 14px 22px; }
-}
-@media (prefers-reduced-motion: reduce) {
-  html { scroll-behavior: auto; }
-  .card, .continue-card, .channel-card, .action-button { transition: none; }
-}
+:root{--ink:#252b33;--muted:#737d89;--line:#e2e7ec;--paper:#fff;--accent:#617991;--shadow:0 8px 26px #25384c12}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:Arial,Helvetica,sans-serif;color:var(--ink);background:linear-gradient(135deg,#fff 0%,#f3f5f7 72%,#e9eef2 100%);min-height:100vh;overflow-x:hidden}
+header{max-width:1800px;margin:auto;padding:24px 4.5%;display:flex;align-items:center;justify-content:space-between;gap:20px}
+.logo{font-size:clamp(28px,2.6vw,44px);font-weight:800;letter-spacing:2px}.logo span{font-weight:400;color:#89929c}
+nav{display:flex;gap:clamp(15px,2.5vw,34px)}nav a{font-size:clamp(14px,1vw,18px);text-decoration:none;color:var(--muted);padding:9px 0}nav a:first-child{color:var(--ink);font-weight:bold;border-bottom:2px solid var(--accent)}
+main{max-width:1800px;margin:auto;padding:12px 4.5% 48px}
+.welcome{display:flex;justify-content:space-between;align-items:end;gap:20px;margin:8px 0 24px}.welcome h1{font-size:clamp(25px,2.5vw,40px);margin-bottom:7px}.welcome p{color:var(--muted);font-size:clamp(14px,1vw,17px)}
+.status{color:var(--muted);font-size:13px;margin-top:10px;min-height:18px}
+.dashboard{display:grid;grid-template-columns:minmax(0,1.7fr) minmax(270px,1fr);gap:18px;margin-bottom:30px}
+.panel{background:#ffffffdf;border:1px solid var(--line);border-radius:19px;padding:clamp(16px,1.7vw,25px);box-shadow:var(--shadow);min-width:0}
+.panel-head,.section-title{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:15px}
+.panel h2,.section-title h2{font-size:clamp(19px,1.6vw,27px)}
+.eyebrow{font-size:10px;letter-spacing:1.1px;color:#89939e;font-weight:bold;margin-bottom:5px}
+.panel-head small,.section-title small,.muted{color:var(--muted);font-size:12px}
+.side-stack{display:grid;grid-template-rows:1fr auto;gap:18px}
+.match-list,.news-list{display:grid;gap:9px}
+.match{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);align-items:center;gap:10px;padding:12px;border-radius:12px;background:#f5f7f8;border:1px solid #e9edf0;min-height:61px}
+.team{font-size:clamp(12px,1vw,15px);font-weight:650;min-width:0}.team span{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.team:last-child{text-align:right}
+.score{text-align:center;font-size:17px;font-weight:800;white-space:nowrap}.score small{display:block;color:var(--muted);font-size:10px;font-weight:500;margin-top:4px;white-space:normal}
+.empty{padding:13px;border-radius:12px;background:#f5f7f8;color:var(--muted);font-size:13px;line-height:1.45}
+.news-item{display:block;padding:10px 12px;border-radius:11px;background:#f5f7f8;color:var(--ink);text-decoration:none;font-size:13px;font-weight:650;line-height:1.35}
+.news-item small{display:block;color:var(--muted);font-size:11px;font-weight:400;margin-top:5px}
+.weather-main{display:flex;align-items:center;gap:16px;margin:8px 0}.weather-temp{font-size:clamp(34px,3vw,46px);font-weight:750}.weather-icon{font-size:35px}
+.section{margin:30px 0}.section-title{margin-bottom:12px}
+.cards{display:flex;gap:14px;overflow-x:auto;padding:5px 5px 14px;scrollbar-width:none}.cards::-webkit-scrollbar{display:none}
+.video-card{flex:0 0 clamp(205px,19vw,285px);border-radius:14px;overflow:hidden;background:#fff;border:1px solid var(--line);box-shadow:var(--shadow);color:inherit;text-decoration:none}
+.video-card img{display:block;width:100%;aspect-ratio:16/9;object-fit:cover;background:#e9edf1}
+.video-info{padding:11px 12px}.video-info strong{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;font-size:13px;line-height:1.35}.video-info small{display:block;color:var(--muted);font-size:11px;margin-top:6px}
+.channel-card{flex:0 0 clamp(155px,14vw,215px);min-height:155px;border-radius:14px;padding:15px;background:#fff;border:1px solid var(--line);box-shadow:var(--shadow);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:9px;text-align:center;color:inherit;text-decoration:none}
+.channel-card img{width:65px;height:65px;border-radius:50%;object-fit:cover;background:#eef1f3}.channel-card strong{font-size:13px;line-height:1.25}.channel-card small{font-size:11px;color:var(--muted)}
+.app-dock{display:flex;gap:12px;flex-wrap:wrap}
+.app-link{display:flex;align-items:center;justify-content:center;min-width:112px;min-height:58px;padding:12px 17px;border-radius:13px;background:#fff;border:1px solid var(--line);color:var(--ink);text-decoration:none;font-weight:700;box-shadow:var(--shadow)}
+.action-button{border:0;border-radius:10px;padding:11px 16px;background:#29323d;color:#fff;font-size:13px;cursor:pointer;margin-top:10px}
+.hidden{display:none!important}
+a:focus-visible,button:focus-visible{outline:4px solid #617991;outline-offset:3px;transform:scale(1.025)}
+footer{padding:18px 4.5%;color:#929ba4;font-size:11px;border-top:1px solid var(--line)}
+@media(max-width:850px){.dashboard{grid-template-columns:1fr}.side-stack{grid-template-rows:auto;grid-template-columns:1fr 1fr}.welcome{align-items:flex-start;flex-direction:column}}
+@media(max-width:560px){header{padding:18px 5%;flex-wrap:wrap}nav{width:100%;justify-content:space-between}main{padding-left:5%;padding-right:5%}.side-stack{grid-template-columns:1fr}.match{gap:5px;padding:9px 7px}.score{font-size:14px}}
+@media(min-width:1000px){.panel{padding:24px}.match{min-height:70px}.video-info strong{font-size:15px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important}}
 </style>
 </head>
 <body>
-<header>
-  <div class="logo">TCL <span>VISION</span></div>
-  <nav>
-    <span class="active">Início</span>
-    <span>Destaques</span>
-    <span>Explorar</span>
-  </nav>
-</header>
-
-<main>
-  <div class="welcome">
-    <h1>Bem-vindo à sua TCL Vision</h1>
-    <p>Seu entretenimento, do seu jeito.</p>
-    <div id="connectionStatus" class="status" aria-live="polite">Conecte sua conta do YouTube para carregar seus canais inscritos.</div>
-  </div>
-
-  <section class="section">
-    <div class="section-title">
-      <h2>Destaques</h2>
-      <small>Seus favoritos primeiro</small>
-    </div>
-    <div class="cards">
-      <div class="card featured" tabindex="0" onclick="buscar('Seus canais favoritos do YouTube')">
-        <span class="number">01 · FAVORITO</span>
-        <h3>Seu canal favorito</h3>
-        <p>Encontre seus conteúdos</p>
-      </div>
-      <div class="card featured" tabindex="0" onclick="irParaInscricoes()">
-        <span class="number">02 · FAVORITO</span>
-        <h3>Seus canais</h3>
-        <p>Veja suas inscrições do YouTube</p>
-      </div>
-      <div class="card featured" tabindex="0" onclick="buscar('Vídeos populares YouTube')">
-        <span class="number">03 · DESTAQUE</span>
-        <h3>Em destaque</h3>
-        <p>Descubra novos vídeos</p>
-      </div>
-      <div class="card connect" tabindex="0" onclick="conectarYouTube()">
-        <span class="plus">+</span>
-        <h3 id="connectTitle">Conectar YouTube</h3>
-        <p id="connectDescription">Acessar seus canais inscritos</p>
-      </div>
-    </div>
-    <button id="disconnectButton" class="action-button hidden" onclick="desconectarYouTube()">Desconectar conta</button>
-  </section>
-
-  <section class="section" id="subscriptionsSection">
-    <div class="section-title">
-      <h2>Seus canais inscritos</h2>
-      <small id="subscriptionCount">Conecte sua conta para começar</small>
-    </div>
-    <div id="subscriptionsList" class="cards">
-      <div class="continue-card">
-        <h3>Seus canais aparecerão aqui</h3>
-        <p>Use “Conectar YouTube” para autorizar o acesso.</p>
-      </div>
-    </div>
-    <button id="loadMoreButton" class="action-button hidden" onclick="carregarMais()">Carregar mais canais</button>
-  </section>
-
-  <section class="section">
-    <div class="section-title">
-      <h2>Continue assistindo</h2>
-      <small>Explorar conteúdos</small>
-    </div>
-    <div class="cards">
-      <div class="continue-card" tabindex="0" onclick="buscar('Filmes e séries YouTube')">
-        <h3>Filmes e séries</h3><p>Explore conteúdos</p>
-      </div>
-      <div class="continue-card" tabindex="0" onclick="buscar('Documentários YouTube')">
-        <h3>Documentários</h3><p>Conhecimento e descoberta</p>
-      </div>
-      <div class="continue-card" tabindex="0" onclick="buscar('Música YouTube')">
-        <h3>Música</h3><p>Seus conteúdos musicais</p>
-      </div>
-      <div class="continue-card" tabindex="0" onclick="buscar('Esportes YouTube')">
-        <h3>Esportes</h3><p>Explore o mundo esportivo</p>
-      </div>
-    </div>
-  </section>
+<header><div class="logo">TCL <span>VISION</span></div><nav><a href="#inicio">Início</a><a href="#esportes">Esportes</a><a href="#youtube">YouTube</a></nav></header>
+<main id="inicio">
+<div class="welcome"><div><h1>Seu mundo na TCL Vision</h1><p>Esportes, notícias e seus vídeos em um só lugar.</p><div id="connectionStatus" class="status" aria-live="polite">Conecte o YouTube para carregar seus canais.</div></div><div class="eyebrow" id="todayLabel">TCL VISION</div></div>
+<div class="dashboard">
+<section class="panel" id="esportes"><div class="panel-head"><div><div class="eyebrow">AGENDA E RESULTADOS</div><h2>⚽ Futebol de hoje</h2></div><a href="https://www.espn.com.br/futebol/" target="_blank" rel="noopener">Ver tudo ↗</a></div><div id="matches" class="match-list"><div class="empty">Carregando partidas…</div></div><p class="muted" style="margin-top:12px">Consulte a ESPN para detalhes e agenda completa.</p></section>
+<div class="side-stack">
+<section class="panel"><div class="panel-head"><div><div class="eyebrow">BRASIL E MUNDO</div><h2>📰 Notícias</h2></div><a href="https://news.google.com/home?hl=pt-BR&gl=BR&ceid=BR:pt-419" target="_blank" rel="noopener">Mais ↗</a></div><div class="news-list"><a class="news-item" href="https://news.google.com/topstories?hl=pt-BR&gl=BR&ceid=BR:pt-419" target="_blank" rel="noopener">Principais notícias do Brasil e do mundo<small>Google Notícias · cobertura atualizada</small></a><a class="news-item" href="https://g1.globo.com/" target="_blank" rel="noopener">G1 — últimas notícias<small>Brasil</small></a><a class="news-item" href="https://www.bbc.com/portuguese" target="_blank" rel="noopener">BBC News Brasil<small>Internacional</small></a></div></section>
+<section class="panel"><div class="panel-head"><div><div class="eyebrow">PREVISÃO LOCAL</div><h2>🌤️ Itapecerica da Serra</h2></div></div><div id="weather" class="weather-main"><div class="empty">Consultando previsão…</div></div><p id="weatherDetail" class="muted"></p></section>
+</div></div>
+<section class="section" id="youtube"><div class="section-title"><h2>Em alta no YouTube</h2><small>Vídeos populares no Brasil</small></div><div id="popularVideos" class="cards"><div class="empty">Carregando vídeos populares…</div></div></section>
+<section class="section"><div class="section-title"><h2>Novidades dos seus canais</h2><small id="subscriptionCount">Conecte sua conta para personalizar</small></div><div id="recentVideos" class="cards"><div class="empty">Conecte o YouTube para ver vídeos recentes dos seus canais.</div></div></section>
+<section class="section"><div class="section-title"><h2>Seus canais inscritos</h2><small>Suas inscrições do YouTube</small></div><div id="subscriptionsList" class="cards"><div class="empty">Conecte sua conta para carregar seus canais.</div></div><button id="connectButton" class="action-button" onclick="conectarYouTube()">Conectar YouTube</button><button id="loadMoreButton" class="action-button hidden" onclick="carregarMais()">Carregar mais canais</button><button id="disconnectButton" class="action-button hidden" onclick="desconectarYouTube()">Desconectar conta</button></section>
+<section class="section"><div class="section-title"><h2>Seus aplicativos</h2><small>Acesso rápido</small></div><div class="app-dock">
+<a class="app-link" href="https://www.netflix.com/" target="_blank" rel="noopener">Netflix</a><a class="app-link" href="https://www.youtube.com/" target="_blank" rel="noopener">YouTube</a><a class="app-link" href="https://www.primevideo.com/" target="_blank" rel="noopener">Prime Video</a><a class="app-link" href="https://www.disneyplus.com/" target="_blank" rel="noopener">Disney+</a><a class="app-link" href="https://www.max.com/" target="_blank" rel="noopener">Max</a><a class="app-link" href="https://globoplay.globo.com/" target="_blank" rel="noopener">Globoplay</a>
+</div></section>
 </main>
-
-<footer>TCL VISION · Sua experiência de entretenimento personalizada</footer>
-
+<footer>TCL VISION · Conteúdo atualizado pela internet · YouTube conectado somente com sua autorização</footer>
 <script>
-const GOOGLE_CLIENT_ID = "1097362619203-dihvcutfcfeqm3ej1kmtmk7q0dubv254.apps.googleusercontent.com";
-const YOUTUBE_SCOPE = "https://www.googleapis.com/auth/youtube.readonly";
-let tokenClient = null;
-let accessToken = null;
-let nextPageToken = null;
-let totalSubscriptions = 0;
-
-function atualizarStatus(mensagem) {
-  document.getElementById("connectionStatus").textContent = mensagem;
-}
-
-function buscar(termo) {
-  window.open("https://www.youtube.com/results?search_query=" + encodeURIComponent(termo), "_blank");
-}
-
-function prepararLogin() {
-  if (!window.google || !google.accounts || !google.accounts.oauth2) {
-    atualizarStatus("O serviço de login do Google ainda está carregando. Aguarde alguns segundos e tente novamente.");
-    return false;
-  }
-  tokenClient = google.accounts.oauth2.initTokenClient({
-    client_id: GOOGLE_CLIENT_ID,
-    scope: YOUTUBE_SCOPE,
-    callback: async (response) => {
-      if (response.error) {
-        atualizarStatus("Não foi possível conectar: " + response.error);
-        return;
-      }
-      accessToken = response.access_token;
-      nextPageToken = null;
-      totalSubscriptions = 0;
-      document.getElementById("connectTitle").textContent = "YouTube conectado";
-      document.getElementById("connectDescription").textContent = "Atualizar inscrições";
-      document.getElementById("disconnectButton").classList.remove("hidden");
-      await carregarInscricoes(false);
-    },
-    error_callback: (error) => {
-      atualizarStatus("A janela de login foi bloqueada ou não pôde ser aberta. Permita pop-ups e tente novamente.");
-      console.error(error);
-    }
-  });
-  return true;
-}
-
-function conectarYouTube() {
-  if (!prepararLogin()) return;
-  atualizarStatus("Abrindo o login seguro do Google...");
-  tokenClient.requestAccessToken({ prompt: accessToken ? "" : "consent" });
-}
-
-async function carregarInscricoes(anexar = true) {
-  if (!accessToken) return;
-  const lista = document.getElementById("subscriptionsList");
-  const botao = document.getElementById("loadMoreButton");
-  botao.disabled = true;
-  botao.textContent = "Carregando...";
-  if (!anexar) {
-    lista.innerHTML = "";
-    atualizarStatus("Buscando os canais inscritos na sua conta...");
-  }
-
-  try {
-    const params = new URLSearchParams({
-      part: "snippet,contentDetails",
-      mine: "true",
-      maxResults: "50"
-    });
-    if (nextPageToken) params.set("pageToken", nextPageToken);
-
-    const resposta = await fetch("https://www.googleapis.com/youtube/v3/subscriptions?" + params.toString(), {
-      headers: { Authorization: "Bearer " + accessToken }
-    });
-    const dados = await resposta.json();
-
-    if (!resposta.ok) {
-      if (resposta.status === 401) {
-        accessToken = null;
-        atualizarStatus("Sua autorização expirou. Toque em “Conectar YouTube” para conectar novamente.");
-      } else if (resposta.status === 403) {
-        atualizarStatus("O Google não autorizou a consulta. Confira se a YouTube Data API v3 está ativada e se sua conta está como usuário de teste.");
-      } else {
-        atualizarStatus("Erro ao carregar inscrições: " + (dados.error?.message || resposta.status));
-      }
-      lista.innerHTML = '<div class="continue-card"><h3>Não foi possível carregar</h3><p>Tente conectar novamente.</p></div>';
-      botao.classList.add("hidden");
-      return;
-    }
-
-    const canais = dados.items || [];
-    nextPageToken = dados.nextPageToken || null;
-    totalSubscriptions += canais.length;
-
-    if (!canais.length && totalSubscriptions === 0) {
-      lista.innerHTML = '<div class="continue-card"><h3>Nenhum canal encontrado</h3><p>Esta conta ainda não possui inscrições visíveis pela API.</p></div>';
-    }
-
-    canais.forEach(item => {
-      const canal = item.snippet?.resourceId?.channelId;
-      if (!canal) return;
-      const titulo = item.snippet.title || "Canal do YouTube";
-      const imagem = item.snippet.thumbnails?.medium?.url || item.snippet.thumbnails?.default?.url || "";
-      const link = document.createElement("a");
-      link.className = "channel-card";
-      link.href = "https://www.youtube.com/channel/" + encodeURIComponent(canal);
-      link.target = "_blank";
-      link.rel = "noopener noreferrer";
-      link.tabIndex = 0;
-
-      if (imagem) {
-        const img = document.createElement("img");
-        img.src = imagem;
-        img.alt = "";
-        link.appendChild(img);
-      }
-      const nome = document.createElement("h3");
-      nome.textContent = titulo;
-      const detalhe = document.createElement("p");
-      detalhe.textContent = "Abrir canal no YouTube";
-      link.append(nome, detalhe);
-      lista.appendChild(link);
-    });
-
-    document.getElementById("subscriptionCount").textContent =
-      totalSubscriptions + " canal(is) carregado(s)" + (nextPageToken ? "" : " · lista completa");
-    atualizarStatus("YouTube conectado. Seus canais inscritos foram carregados.");
-    botao.classList.toggle("hidden", !nextPageToken);
-  } catch (erro) {
-    console.error(erro);
-    atualizarStatus("Falha de conexão. Verifique a internet e tente novamente.");
-  } finally {
-    botao.disabled = false;
-    botao.textContent = "Carregar mais canais";
-  }
-}
-
-function carregarMais() {
-  carregarInscricoes(true);
-}
-
-function irParaInscricoes() {
-  document.getElementById("subscriptionsSection").scrollIntoView({ behavior: "smooth" });
-  if (!accessToken) atualizarStatus("Primeiro conecte sua conta do YouTube.");
-}
-
-function desconectarYouTube() {
-  if (accessToken && window.google?.accounts?.oauth2) {
-    google.accounts.oauth2.revoke(accessToken, () => {});
-  }
-  accessToken = null;
-  nextPageToken = null;
-  totalSubscriptions = 0;
-  document.getElementById("connectTitle").textContent = "Conectar YouTube";
-  document.getElementById("connectDescription").textContent = "Acessar seus canais inscritos";
-  document.getElementById("disconnectButton").classList.add("hidden");
-  document.getElementById("subscriptionCount").textContent = "Conecte sua conta para começar";
-  document.getElementById("subscriptionsList").innerHTML =
-    '<div class="continue-card"><h3>Seus canais aparecerão aqui</h3><p>Use “Conectar YouTube” para autorizar o acesso.</p></div>';
-  document.getElementById("loadMoreButton").classList.add("hidden");
-  atualizarStatus("Conta desconectada deste site.");
-}
-
-// Navegação espacial pelo controle remoto (setas e OK/Enter)
-(function configurarControleRemoto() {
-  const seletor = '.card[tabindex="0"], .continue-card[tabindex="0"], .channel-card, .action-button:not(.hidden)';
-  function itensVisiveis() {
-    return [...document.querySelectorAll(seletor)].filter(el => {
-      const r = el.getBoundingClientRect();
-      return r.width > 0 && r.height > 0 && getComputedStyle(el).visibility !== 'hidden';
-    });
-  }
-  function focar(el) {
-    if (!el) return;
-    el.focus({ preventScroll: true });
-    el.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
-  }
-  document.addEventListener('keydown', function(e) {
-    const tecla = e.key;
-    if (!['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(tecla)) return;
-    const itens = itensVisiveis();
-    if (!itens.length) return;
-    e.preventDefault();
-    const atual = document.activeElement;
-    if (!itens.includes(atual)) {
-      focar(itens[0]);
-      return;
-    }
-    const a = atual.getBoundingClientRect();
-    const ax = a.left + a.width / 2;
-    const ay = a.top + a.height / 2;
-    let melhor = null;
-    let menorPontuacao = Infinity;
-    for (const candidato of itens) {
-      if (candidato === atual) continue;
-      const r = candidato.getBoundingClientRect();
-      const dx = (r.left + r.width / 2) - ax;
-      const dy = (r.top + r.height / 2) - ay;
-      const naDirecao = tecla === 'ArrowRight' ? dx > 8 :
-        tecla === 'ArrowLeft' ? dx < -8 :
-        tecla === 'ArrowDown' ? dy > 8 : dy < -8;
-      if (!naDirecao) continue;
-      const principal = (tecla === 'ArrowLeft' || tecla === 'ArrowRight') ? Math.abs(dx) : Math.abs(dy);
-      const lateral = (tecla === 'ArrowLeft' || tecla === 'ArrowRight') ? Math.abs(dy) : Math.abs(dx);
-      const pontuacao = principal + lateral * 2.2;
-      if (pontuacao < menorPontuacao) {
-        menorPontuacao = pontuacao;
-        melhor = candidato;
-      }
-    }
-    if (melhor) focar(melhor);
-  });
-  window.addEventListener('load', () => {
-    const primeiro = document.querySelector('.card[tabindex="0"]');
-    if (primeiro && window.matchMedia('(min-width: 1000px)').matches) {
-      setTimeout(() => focar(primeiro), 250);
-    }
-  });
-})();
+const GOOGLE_CLIENT_ID="1097362619203-dihvcutfcfeqm3ej1kmtmk7q0dubv254.apps.googleusercontent.com";
+const YOUTUBE_SCOPE="https://www.googleapis.com/auth/youtube.readonly";
+let tokenClient=null,accessToken=null,nextPageToken=null,totalSubscriptions=0,subscriptionItems=[];
+const $=id=>document.getElementById(id);
+function status(t){$("connectionStatus").textContent=t}
+function esc(s){return String(s||"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+function videoCard(v){const s=v.snippet||{},id=v.id?.videoId||v.id,thumb=s.thumbnails?.medium?.url||s.thumbnails?.high?.url||"";if(!id)return "";return '<a class="video-card" href="https://www.youtube.com/watch?v='+encodeURIComponent(id)+'" target="_blank" rel="noopener"><img loading="lazy" src="'+esc(thumb)+'" alt=""><div class="video-info"><strong>'+esc(s.title)+'</strong><small>'+esc(s.channelTitle||"YouTube")+'</small></div></a>'}
+async function carregarEsportes(){const box=$("matches");try{const leagues=[["Brasil","bra.1"],["Inglaterra","eng.1"],["Espanha","esp.1"],["Champions","uefa.champions"]];const feeds=await Promise.all(leagues.map(async l=>{try{const r=await fetch("https://site.api.espn.com/apis/site/v2/sports/soccer/"+l[1]+"/scoreboard?limit=5");if(!r.ok)throw 0;return {name:l[0],data:await r.json()}}catch(e){return null}}));const events=feeds.filter(Boolean).flatMap(x=>(x.data.events||[]).map(ev=>({ev,league:x.name}))).sort((a,b)=>new Date(a.ev.date)-new Date(b.ev.date)).slice(0,7);if(!events.length)throw 0;box.innerHTML=events.map(({ev,league})=>{const c=ev.competitions?.[0],t=c?.competitors||[],h=t.find(x=>x.homeAway==="home")||t[0],a=t.find(x=>x.homeAway==="away")||t[1],st=c?.status?.type||{},date=new Date(ev.date),when=st.shortDetail||(isNaN(date)?"":date.toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"}));const score=st.state==="pre"?"VS":(h?.score??"—")+" × "+(a?.score??"—");return '<div class="match"><div class="team"><span>'+esc(h?.team?.displayName||"A definir")+'</span></div><div class="score">'+esc(score)+'<small>'+esc(when+" · "+league)+'</small></div><div class="team"><span>'+esc(a?.team?.displayName||"A definir")+'</span></div></div>'}).join("")}catch(e){box.innerHTML='<div class="empty">Agenda indisponível agora. <a href="https://www.espn.com.br/futebol/" target="_blank" rel="noopener">Ver futebol na ESPN ↗</a></div>'}}
+async function carregarClima(){try{const u="https://api.open-meteo.com/v1/forecast?latitude=-23.7175&longitude=-46.8492&current=temperature_2m,apparent_temperature,relative_humidity_2m,weather_code&daily=temperature_2m_max,temperature_2m_min,precipitation_probability_max&timezone=America%2FSao_Paulo";const r=await fetch(u);if(!r.ok)throw 0;const d=await r.json(),c=d.current,day=d.daily,code=c.weather_code;const desc=code===0?"Céu limpo":code<=3?"Parcialmente nublado":code<=48?"Neblina":code<=67||code<=82?"Chuva":"Instável";$("weather").innerHTML='<div class="weather-temp">'+Math.round(c.temperature_2m)+'°</div><div><strong>'+desc+'</strong><p class="muted">Sensação de '+Math.round(c.apparent_temperature)+'°</p></div>'; $("weatherDetail").textContent="Máx. "+Math.round(day.temperature_2m_max[0])+"° · Mín. "+Math.round(day.temperature_2m_min[0])+"° · Chuva "+(day.precipitation_probability_max?.[0]??"—")+"% · Umidade "+c.relative_humidity_2m+"%"}catch(e){$("weather").textContent="Previsão indisponível no momento."}}
+async function carregarPopulares(){try{const p=new URLSearchParams({part:"snippet",chart:"mostPopular",regionCode:"BR",maxResults:"12"});const r=await fetch("https://www.googleapis.com/youtube/v3/videos?"+p);if(!r.ok)throw 0;const d=await r.json();$("popularVideos").innerHTML=(d.items||[]).map(videoCard).join("")||'<div class="empty">Nenhum vídeo popular disponível.</div>'}catch(e){$("popularVideos").innerHTML='<a class="app-link" href="https://www.youtube.com/feed/trending" target="_blank" rel="noopener">Explorar vídeos em alta ↗</a>'}}
+function prepararLogin(){if(!window.google?.accounts?.oauth2){status("Login do Google carregando. Aguarde e tente novamente.");return false}tokenClient=google.accounts.oauth2.initTokenClient({client_id:GOOGLE_CLIENT_ID,scope:YOUTUBE_SCOPE,callback:async response=>{if(response.error){status("Não foi possível conectar: "+response.error);return}accessToken=response.access_token;nextPageToken=null;totalSubscriptions=0;subscriptionItems=[];$("connectButton").classList.add("hidden");$("disconnectButton").classList.remove("hidden");await carregarInscricoes(false)},error_callback:()=>status("Permita pop-ups para concluir o login do Google.")});return true}
+function conectarYouTube(){if(!prepararLogin())return;status("Abrindo login seguro do Google…");tokenClient.requestAccessToken({prompt:accessToken?"":"consent"})}
+async function carregarInscricoes(anexar=true){if(!accessToken)return;const btn=$("loadMoreButton");btn.disabled=true;btn.textContent="Carregando…";if(!anexar){$("subscriptionsList").innerHTML="";status("Buscando seus canais inscritos…")}try{const p=new URLSearchParams({part:"snippet,contentDetails",mine:"true",maxResults:"50"});if(nextPageToken)p.set("pageToken",nextPageToken);const r=await fetch("https://www.googleapis.com/youtube/v3/subscriptions?"+p,{headers:{Authorization:"Bearer "+accessToken}});const d=await r.json();if(!r.ok){status("Erro ao carregar canais: "+(d.error?.message||r.status));return}const items=d.items||[];subscriptionItems.push(...items);nextPageToken=d.nextPageToken||null;totalSubscriptions+=items.length;items.forEach(item=>{const sn=item.snippet||{},id=sn.resourceId?.channelId;if(!id)return;const a=document.createElement("a");a.className="channel-card";a.href="https://www.youtube.com/channel/"+encodeURIComponent(id);a.target="_blank";a.rel="noopener";const im=document.createElement("img");im.loading="lazy";im.src=sn.thumbnails?.medium?.url||sn.thumbnails?.default?.url||"";im.alt="";const name=document.createElement("strong");name.textContent=sn.title||"Canal";const small=document.createElement("small");small.textContent="Abrir canal no YouTube";a.append(im,name,small);$("subscriptionsList").append(a)});$("subscriptionCount").textContent=totalSubscriptions+" canal(is) carregado(s)";btn.classList.toggle("hidden",!nextPageToken);status("YouTube conectado. Suas inscrições foram carregadas.");await carregarRecentes()}catch(e){status("Falha de conexão ao carregar inscrições.")}finally{btn.disabled=false;btn.textContent="Carregar mais canais"}}
+async function carregarRecentes(){try{const ids=subscriptionItems.slice(0,8).map(i=>i.snippet?.resourceId?.channelId).filter(Boolean);if(!ids.length)return;const p=new URLSearchParams({part:"contentDetails",id:ids.join(",")});const r=await fetch("https://www.googleapis.com/youtube/v3/channels?"+p,{headers:{Authorization:"Bearer "+accessToken}});if(!r.ok)throw 0;const d=await r.json();const playlists=(d.items||[]).map(x=>x.contentDetails?.relatedPlaylists?.uploads).filter(Boolean);const results=await Promise.all(playlists.map(async id=>{const q=new URLSearchParams({part:"snippet",playlistId:id,maxResults:"3"});const x=await fetch("https://www.googleapis.com/youtube/v3/playlistItems?"+q,{headers:{Authorization:"Bearer "+accessToken}});if(!x.ok)return [];return (await x.json()).items||[]}));const vids=results.flat().sort((a,b)=>new Date(b.snippet?.publishedAt||0)-new Date(a.snippet?.publishedAt||0)).slice(0,12).map(i=>({id:i.snippet?.resourceId?.videoId,snippet:i.snippet}));$("recentVideos").innerHTML=vids.map(videoCard).join("")||'<div class="empty">Não encontramos vídeos recentes nesses canais.</div>'}catch(e){$("recentVideos").innerHTML='<div class="empty">Não foi possível carregar vídeos recentes agora.</div>'}}
+function carregarMais(){carregarInscricoes(true)}
+function desconectarYouTube(){if(accessToken&&window.google?.accounts?.oauth2)google.accounts.oauth2.revoke(accessToken,()=>{});accessToken=null;nextPageToken=null;totalSubscriptions=0;subscriptionItems=[];$("connectButton").classList.remove("hidden");$("disconnectButton").classList.add("hidden");$("loadMoreButton").classList.add("hidden");$("subscriptionCount").textContent="Conecte sua conta para personalizar";$("subscriptionsList").innerHTML='<div class="empty">Conecte sua conta para carregar seus canais.</div>';$("recentVideos").innerHTML='<div class="empty">Conecte o YouTube para ver novidades dos seus canais.</div>';status("Conta desconectada deste site.")}
+(function(){const selector='a,button';function visible(){return [...document.querySelectorAll(selector)].filter(e=>{const r=e.getBoundingClientRect();return r.width&&r.height&&getComputedStyle(e).visibility!=="hidden"})}function focus(e){if(e){e.focus({preventScroll:true});e.scrollIntoView({behavior:"smooth",block:"nearest",inline:"nearest"})}}document.addEventListener("keydown",e=>{if(!["ArrowUp","ArrowDown","ArrowLeft","ArrowRight"].includes(e.key))return;const all=visible();if(!all.length)return;e.preventDefault();const cur=document.activeElement;if(!all.includes(cur)){focus(all[0]);return}const a=cur.getBoundingClientRect(),ax=a.left+a.width/2,ay=a.top+a.height/2;let best=null,score=Infinity;for(const el of all){if(el===cur)continue;const r=el.getBoundingClientRect(),dx=r.left+r.width/2-ax,dy=r.top+r.height/2-ay,hor=e.key==="ArrowRight"||e.key==="ArrowLeft",dir=hor?(e.key==="ArrowRight"?dx>8:dx< -8):(e.key==="ArrowDown"?dy>8:dy< -8);if(!dir)continue;const s=Math.abs(hor?dx:dy)+2*Math.abs(hor?dy:dx);if(s<score){score=s;best=el}}if(best)focus(best)})})();
+$("todayLabel").textContent=new Intl.DateTimeFormat("pt-BR",{weekday:"long",day:"2-digit",month:"long"}).format(new Date()).toUpperCase();
+carregarEsportes();carregarClima();carregarPopulares();
+setInterval(()=>{carregarEsportes();carregarClima()},15*60*1000);
 </script>
 </body>
 </html>

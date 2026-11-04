@@ -1,206 +1,111 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>TCL Vision</title>
-
+<script src="https://accounts.google.com/gsi/client" async defer></script>
 <style>
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
+* { box-sizing: border-box; margin: 0; padding: 0; }
 body {
-  font-family: Arial, sans-serif;
-  color: #292d32;
+  font-family: Arial, sans-serif; color: #292d32;
   background: linear-gradient(135deg, #ffffff, #f0f1f3);
-  min-height: 100vh;
-  overflow-x: hidden;
+  min-height: 100vh; overflow-x: hidden;
 }
-
 header {
-  height: 100px;
-  padding: 28px 5%;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+  min-height: 100px; padding: 28px 5%; display: flex;
+  align-items: center; justify-content: space-between; gap: 20px;
 }
-
-.logo {
-  font-size: 30px;
-  font-weight: 800;
-  letter-spacing: 2px;
-}
-
-.logo span {
-  color: #858b94;
-  font-weight: 400;
-}
-
-nav {
-  display: flex;
-  gap: 35px;
-  color: #737982;
-  font-size: 16px;
-}
-
+.logo { font-size: 30px; font-weight: 800; letter-spacing: 2px; }
+.logo span { color: #858b94; font-weight: 400; }
+nav { display: flex; gap: 35px; color: #737982; font-size: 16px; }
 nav span.active {
-  color: #20242a;
-  font-weight: bold;
-  border-bottom: 2px solid #777e88;
-  padding-bottom: 8px;
+  color: #20242a; font-weight: bold;
+  border-bottom: 2px solid #777e88; padding-bottom: 8px;
 }
-
-main {
-  padding: 20px 5% 60px;
-}
-
-.welcome {
-  margin-bottom: 36px;
-}
-
-.welcome h1 {
-  font-size: 32px;
-  margin-bottom: 9px;
-}
-
-.welcome p {
-  color: #858b94;
-  font-size: 16px;
-}
-
-.section {
-  margin-bottom: 42px;
-}
-
+main { padding: 20px 5% 60px; }
+.welcome { margin-bottom: 36px; }
+.welcome h1 { font-size: 32px; margin-bottom: 9px; }
+.welcome p { color: #858b94; font-size: 16px; }
+.section { margin-bottom: 42px; }
 .section-title {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 20px;
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 15px; margin-bottom: 20px;
 }
-
-.section-title h2 {
-  font-size: 23px;
-  font-weight: 700;
-}
-
-.section-title small {
-  color: #8b919a;
-}
-
+.section-title h2 { font-size: 23px; font-weight: 700; }
+.section-title small { color: #8b919a; }
 .cards {
-  display: flex;
-  gap: 18px;
-  overflow-x: auto;
-  padding: 8px 5px 18px;
-  scrollbar-width: none;
+  display: flex; gap: 18px; overflow-x: auto;
+  padding: 8px 5px 18px; scrollbar-width: none;
 }
-
-.cards::-webkit-scrollbar {
-  display: none;
-}
-
+.cards::-webkit-scrollbar { display: none; }
 .card {
-  flex: 0 0 235px;
-  height: 145px;
-  border-radius: 15px;
+  flex: 0 0 235px; min-height: 145px; border-radius: 15px;
   background: linear-gradient(145deg, #ffffff, #e9ebee);
-  border: 1px solid #e0e2e5;
-  box-shadow: 0 5px 18px #0000000b;
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  cursor: pointer;
-  transition: .2s;
+  border: 1px solid #e0e2e5; box-shadow: 0 5px 18px #0000000b;
+  padding: 20px; display: flex; flex-direction: column;
+  justify-content: space-between; cursor: pointer; transition: .2s;
 }
-
-.card:focus,
-.card:hover,
-.card.selected {
-  outline: 3px solid #777e88;
-  transform: scale(1.025);
+.card:focus, .card:hover, .card.selected,
+.continue-card:focus, .continue-card:hover, .continue-card.selected,
+.channel-card:focus, .channel-card:hover {
+  outline: 3px solid #777e88; transform: scale(1.025);
 }
-
-.card .number {
-  font-size: 13px;
-  color: #a0a5ac;
-}
-
-.card h3 {
-  font-size: 19px;
-}
-
-.card p {
-  font-size: 13px;
-  color: #858b94;
-}
-
-.card.featured {
-  background: linear-gradient(145deg, #ffffff, #e2e5e9);
-}
-
+.card .number { font-size: 13px; color: #a0a5ac; }
+.card h3 { font-size: 19px; }
+.card p { font-size: 13px; color: #858b94; }
+.card.featured { background: linear-gradient(145deg, #ffffff, #e2e5e9); }
 .card.connect {
-  background: #e9ebee;
-  border-style: dashed;
-  align-items: center;
-  text-align: center;
-  justify-content: center;
-  gap: 12px;
+  background: #e9ebee; border-style: dashed; align-items: center;
+  text-align: center; justify-content: center; gap: 12px;
 }
-
-.card.connect .plus {
-  font-size: 30px;
-  color: #747b85;
-}
-
+.card.connect .plus { font-size: 30px; color: #747b85; }
 .continue-card {
-  flex: 0 0 260px;
-  height: 150px;
-  border-radius: 15px;
-  padding: 20px;
+  flex: 0 0 260px; min-height: 150px; border-radius: 15px;
+  padding: 20px; background: #e9ebee; border: 1px solid #dfe1e5;
+  display: flex; flex-direction: column; justify-content: flex-end;
+  gap: 10px; cursor: pointer;
+}
+.continue-card p { font-size: 13px; color: #858b94; }
+.status {
+  margin-top: 14px; color: #737982; font-size: 14px;
+  line-height: 1.5; min-height: 22px;
+}
+.channel-card {
+  flex: 0 0 220px; min-height: 190px; border-radius: 15px;
+  padding: 18px; background: #fff; border: 1px solid #e0e2e5;
+  box-shadow: 0 5px 18px #0000000b; cursor: pointer;
+  display: flex; flex-direction: column; align-items: center;
+  justify-content: center; gap: 12px; text-align: center;
+  color: inherit; text-decoration: none; transition: .2s;
+}
+.channel-card img {
+  width: 76px; height: 76px; border-radius: 50%; object-fit: cover;
   background: #e9ebee;
-  border: 1px solid #dfe1e5;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  gap: 10px;
-  cursor: pointer;
 }
-
-.continue-card:focus,
-.continue-card:hover,
-.continue-card.selected {
-  outline: 3px solid #777e88;
-  transform: scale(1.025);
+.channel-card h3 { font-size: 16px; line-height: 1.3; }
+.channel-card p { color: #858b94; font-size: 12px; }
+.action-button {
+  border: 0; border-radius: 10px; padding: 12px 18px;
+  background: #292d32; color: white; font-size: 14px;
+  cursor: pointer; margin-top: 12px;
 }
-
-.continue-card p {
-  font-size: 13px;
-  color: #858b94;
-}
-
+.action-button:focus, .action-button:hover { outline: 3px solid #9ba1aa; }
+.action-button:disabled { opacity: .55; cursor: wait; }
+.hidden { display: none !important; }
 footer {
-  padding: 20px 5%;
-  color: #9a9fa6;
-  font-size: 12px;
+  padding: 20px 5%; color: #9a9fa6; font-size: 12px;
   border-top: 1px solid #e4e6e9;
 }
-
 @media(max-width:700px) {
   header { height: auto; flex-wrap: wrap; gap: 20px; }
   nav { gap: 15px; font-size: 13px; }
   .welcome h1 { font-size: 25px; }
+  .section-title { align-items: flex-start; flex-direction: column; }
 }
 </style>
 </head>
-
 <body>
-
 <header>
   <div class="logo">TCL <span>VISION</span></div>
   <nav>
@@ -211,10 +116,10 @@ footer {
 </header>
 
 <main>
-
   <div class="welcome">
     <h1>Bem-vindo à sua TCL Vision</h1>
     <p>Seu entretenimento, do seu jeito.</p>
+    <div id="connectionStatus" class="status" aria-live="polite">Conecte sua conta do YouTube para carregar seus canais inscritos.</div>
   </div>
 
   <section class="section">
@@ -222,38 +127,43 @@ footer {
       <h2>Destaques</h2>
       <small>Seus favoritos primeiro</small>
     </div>
-
     <div class="cards">
-
-      <div class="card featured" tabindex="0"
-      onclick="buscar('Seus canais favoritos do YouTube')">
+      <div class="card featured" tabindex="0" onclick="buscar('Seus canais favoritos do YouTube')">
         <span class="number">01 · FAVORITO</span>
         <h3>Seu canal favorito</h3>
-        <p>Conteúdos do YouTube</p>
+        <p>Encontre seus conteúdos</p>
       </div>
-
-      <div class="card featured" tabindex="0"
-      onclick="buscar('Canais inscritos no YouTube')">
+      <div class="card featured" tabindex="0" onclick="irParaInscricoes()">
         <span class="number">02 · FAVORITO</span>
         <h3>Seus canais</h3>
-        <p>Explore suas inscrições</p>
+        <p>Veja suas inscrições do YouTube</p>
       </div>
-
-      <div class="card featured" tabindex="0"
-      onclick="buscar('Vídeos populares YouTube')">
+      <div class="card featured" tabindex="0" onclick="buscar('Vídeos populares YouTube')">
         <span class="number">03 · DESTAQUE</span>
         <h3>Em destaque</h3>
         <p>Descubra novos vídeos</p>
       </div>
-
-      <div class="card connect" tabindex="0"
-      onclick="buscar('YouTube')">
+      <div class="card connect" tabindex="0" onclick="conectarYouTube()">
         <span class="plus">+</span>
-        <h3>Conectar YouTube</h3>
-        <p>Preparar integração</p>
+        <h3 id="connectTitle">Conectar YouTube</h3>
+        <p id="connectDescription">Acessar seus canais inscritos</p>
       </div>
-
     </div>
+    <button id="disconnectButton" class="action-button hidden" onclick="desconectarYouTube()">Desconectar conta</button>
+  </section>
+
+  <section class="section" id="subscriptionsSection">
+    <div class="section-title">
+      <h2>Seus canais inscritos</h2>
+      <small id="subscriptionCount">Conecte sua conta para começar</small>
+    </div>
+    <div id="subscriptionsList" class="cards">
+      <div class="continue-card">
+        <h3>Seus canais aparecerão aqui</h3>
+        <p>Use “Conectar YouTube” para autorizar o acesso.</p>
+      </div>
+    </div>
+    <button id="loadMoreButton" class="action-button hidden" onclick="carregarMais()">Carregar mais canais</button>
   </section>
 
   <section class="section">
@@ -261,74 +171,201 @@ footer {
       <h2>Continue assistindo</h2>
       <small>Explorar conteúdos</small>
     </div>
-
     <div class="cards">
-
-      <div class="continue-card" tabindex="0"
-      onclick="buscar('Filmes e séries YouTube')">
-        <h3>Filmes e séries</h3>
-        <p>Explore conteúdos</p>
+      <div class="continue-card" tabindex="0" onclick="buscar('Filmes e séries YouTube')">
+        <h3>Filmes e séries</h3><p>Explore conteúdos</p>
       </div>
-
-      <div class="continue-card" tabindex="0"
-      onclick="buscar('Documentários YouTube')">
-        <h3>Documentários</h3>
-        <p>Conhecimento e descoberta</p>
+      <div class="continue-card" tabindex="0" onclick="buscar('Documentários YouTube')">
+        <h3>Documentários</h3><p>Conhecimento e descoberta</p>
       </div>
-
-      <div class="continue-card" tabindex="0"
-      onclick="buscar('Música YouTube')">
-        <h3>Música</h3>
-        <p>Seus conteúdos musicais</p>
+      <div class="continue-card" tabindex="0" onclick="buscar('Música YouTube')">
+        <h3>Música</h3><p>Seus conteúdos musicais</p>
       </div>
-
-      <div class="continue-card" tabindex="0"
-      onclick="buscar('Esportes YouTube')">
-        <h3>Esportes</h3>
-        <p>Explore o mundo esportivo</p>
+      <div class="continue-card" tabindex="0" onclick="buscar('Esportes YouTube')">
+        <h3>Esportes</h3><p>Explore o mundo esportivo</p>
       </div>
-
     </div>
   </section>
-
 </main>
 
-<footer>
-  TCL VISION · Sua experiência de entretenimento personalizada
-</footer>
+<footer>TCL VISION · Sua experiência de entretenimento personalizada</footer>
 
 <script>
+const GOOGLE_CLIENT_ID = "1097362619203-dihvcutfcfeqm3ej1kmtmk7q0dubv254.apps.googleusercontent.com";
+const YOUTUBE_SCOPE = "https://www.googleapis.com/auth/youtube.readonly";
+let tokenClient = null;
+let accessToken = null;
+let nextPageToken = null;
+let totalSubscriptions = 0;
+
+function atualizarStatus(mensagem) {
+  document.getElementById("connectionStatus").textContent = mensagem;
+}
+
 function buscar(termo) {
-  window.open(
-    'https://www.youtube.com/results?search_query=' +
-    encodeURIComponent(termo),
-    '_blank'
-  );
+  window.open("https://www.youtube.com/results?search_query=" + encodeURIComponent(termo), "_blank");
+}
+
+function prepararLogin() {
+  if (!window.google || !google.accounts || !google.accounts.oauth2) {
+    atualizarStatus("O serviço de login do Google ainda está carregando. Aguarde alguns segundos e tente novamente.");
+    return false;
+  }
+  tokenClient = google.accounts.oauth2.initTokenClient({
+    client_id: GOOGLE_CLIENT_ID,
+    scope: YOUTUBE_SCOPE,
+    callback: async (response) => {
+      if (response.error) {
+        atualizarStatus("Não foi possível conectar: " + response.error);
+        return;
+      }
+      accessToken = response.access_token;
+      nextPageToken = null;
+      totalSubscriptions = 0;
+      document.getElementById("connectTitle").textContent = "YouTube conectado";
+      document.getElementById("connectDescription").textContent = "Atualizar inscrições";
+      document.getElementById("disconnectButton").classList.remove("hidden");
+      await carregarInscricoes(false);
+    },
+    error_callback: (error) => {
+      atualizarStatus("A janela de login foi bloqueada ou não pôde ser aberta. Permita pop-ups e tente novamente.");
+      console.error(error);
+    }
+  });
+  return true;
+}
+
+function conectarYouTube() {
+  if (!prepararLogin()) return;
+  atualizarStatus("Abrindo o login seguro do Google...");
+  tokenClient.requestAccessToken({ prompt: accessToken ? "" : "consent" });
+}
+
+async function carregarInscricoes(anexar = true) {
+  if (!accessToken) return;
+  const lista = document.getElementById("subscriptionsList");
+  const botao = document.getElementById("loadMoreButton");
+  botao.disabled = true;
+  botao.textContent = "Carregando...";
+  if (!anexar) {
+    lista.innerHTML = "";
+    atualizarStatus("Buscando os canais inscritos na sua conta...");
+  }
+
+  try {
+    const params = new URLSearchParams({
+      part: "snippet,contentDetails",
+      mine: "true",
+      maxResults: "50"
+    });
+    if (nextPageToken) params.set("pageToken", nextPageToken);
+
+    const resposta = await fetch("https://www.googleapis.com/youtube/v3/subscriptions?" + params.toString(), {
+      headers: { Authorization: "Bearer " + accessToken }
+    });
+    const dados = await resposta.json();
+
+    if (!resposta.ok) {
+      if (resposta.status === 401) {
+        accessToken = null;
+        atualizarStatus("Sua autorização expirou. Toque em “Conectar YouTube” para conectar novamente.");
+      } else if (resposta.status === 403) {
+        atualizarStatus("O Google não autorizou a consulta. Confira se a YouTube Data API v3 está ativada e se sua conta está como usuário de teste.");
+      } else {
+        atualizarStatus("Erro ao carregar inscrições: " + (dados.error?.message || resposta.status));
+      }
+      lista.innerHTML = '<div class="continue-card"><h3>Não foi possível carregar</h3><p>Tente conectar novamente.</p></div>';
+      botao.classList.add("hidden");
+      return;
+    }
+
+    const canais = dados.items || [];
+    nextPageToken = dados.nextPageToken || null;
+    totalSubscriptions += canais.length;
+
+    if (!canais.length && totalSubscriptions === 0) {
+      lista.innerHTML = '<div class="continue-card"><h3>Nenhum canal encontrado</h3><p>Esta conta ainda não possui inscrições visíveis pela API.</p></div>';
+    }
+
+    canais.forEach(item => {
+      const canal = item.snippet?.resourceId?.channelId;
+      if (!canal) return;
+      const titulo = item.snippet.title || "Canal do YouTube";
+      const imagem = item.snippet.thumbnails?.medium?.url || item.snippet.thumbnails?.default?.url || "";
+      const link = document.createElement("a");
+      link.className = "channel-card";
+      link.href = "https://www.youtube.com/channel/" + encodeURIComponent(canal);
+      link.target = "_blank";
+      link.rel = "noopener noreferrer";
+      link.tabIndex = 0;
+
+      if (imagem) {
+        const img = document.createElement("img");
+        img.src = imagem;
+        img.alt = "";
+        link.appendChild(img);
+      }
+      const nome = document.createElement("h3");
+      nome.textContent = titulo;
+      const detalhe = document.createElement("p");
+      detalhe.textContent = "Abrir canal no YouTube";
+      link.append(nome, detalhe);
+      lista.appendChild(link);
+    });
+
+    document.getElementById("subscriptionCount").textContent =
+      totalSubscriptions + " canal(is) carregado(s)" + (nextPageToken ? "" : " · lista completa");
+    atualizarStatus("YouTube conectado. Seus canais inscritos foram carregados.");
+    botao.classList.toggle("hidden", !nextPageToken);
+  } catch (erro) {
+    console.error(erro);
+    atualizarStatus("Falha de conexão. Verifique a internet e tente novamente.");
+  } finally {
+    botao.disabled = false;
+    botao.textContent = "Carregar mais canais";
+  }
+}
+
+function carregarMais() {
+  carregarInscricoes(true);
+}
+
+function irParaInscricoes() {
+  document.getElementById("subscriptionsSection").scrollIntoView({ behavior: "smooth" });
+  if (!accessToken) atualizarStatus("Primeiro conecte sua conta do YouTube.");
+}
+
+function desconectarYouTube() {
+  if (accessToken && window.google?.accounts?.oauth2) {
+    google.accounts.oauth2.revoke(accessToken, () => {});
+  }
+  accessToken = null;
+  nextPageToken = null;
+  totalSubscriptions = 0;
+  document.getElementById("connectTitle").textContent = "Conectar YouTube";
+  document.getElementById("connectDescription").textContent = "Acessar seus canais inscritos";
+  document.getElementById("disconnectButton").classList.add("hidden");
+  document.getElementById("subscriptionCount").textContent = "Conecte sua conta para começar";
+  document.getElementById("subscriptionsList").innerHTML =
+    '<div class="continue-card"><h3>Seus canais aparecerão aqui</h3><p>Use “Conectar YouTube” para autorizar o acesso.</p></div>';
+  document.getElementById("loadMoreButton").classList.add("hidden");
+  atualizarStatus("Conta desconectada deste site.");
 }
 
 // Navegação básica pelo controle remoto
-document.addEventListener('keydown', function(e) {
-  const cards = [...document.querySelectorAll(
-    '.card, .continue-card'
-  )];
-
-  let atual = cards.indexOf(document.activeElement);
-
-  if (e.key === 'ArrowRight') {
-    e.preventDefault();
-    cards[Math.min(atual + 1, cards.length - 1)].focus();
+document.addEventListener("keydown", function(e) {
+  const cards = [...document.querySelectorAll(".card, .continue-card, .channel-card, .action-button:not(.hidden)")];
+  const atual = cards.indexOf(document.activeElement);
+  if (e.key === "ArrowRight" && atual >= 0) {
+    e.preventDefault(); cards[Math.min(atual + 1, cards.length - 1)]?.focus();
   }
-
-  if (e.key === 'ArrowLeft') {
-    e.preventDefault();
-    cards[Math.max(atual - 1, 0)].focus();
+  if (e.key === "ArrowLeft" && atual >= 0) {
+    e.preventDefault(); cards[Math.max(atual - 1, 0)]?.focus();
   }
-
-  if (e.key === 'Enter' && atual >= 0) {
+  if (e.key === "Enter" && atual >= 0 && document.activeElement.tagName !== "A") {
     document.activeElement.click();
   }
 });
 </script>
-
 </body>
 </html>

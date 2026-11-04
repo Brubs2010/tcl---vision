@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -102,6 +103,42 @@ footer {
   nav { gap: 15px; font-size: 13px; }
   .welcome h1 { font-size: 25px; }
   .section-title { align-items: flex-start; flex-direction: column; }
+}
+
+/* FASE 2 — melhorias para TV e controle remoto */
+html { scroll-behavior: smooth; }
+.card, .continue-card, .channel-card, .action-button {
+  -webkit-tap-highlight-color: transparent;
+  transition: transform .16s ease, outline-color .16s ease, box-shadow .16s ease;
+}
+.card:focus-visible, .continue-card:focus-visible,
+.channel-card:focus-visible, .action-button:focus-visible {
+  outline: 4px solid #647891;
+  outline-offset: 4px;
+  transform: scale(1.035);
+  box-shadow: 0 8px 28px #26364a22;
+}
+@media (min-width: 1000px) {
+  header { padding-top: 30px; padding-bottom: 24px; }
+  .logo { font-size: clamp(34px, 2.5vw, 48px); }
+  nav { font-size: clamp(17px, 1.2vw, 22px); }
+  main { padding-top: 30px; }
+  .welcome h1 { font-size: clamp(36px, 2.8vw, 52px); }
+  .welcome p { font-size: clamp(18px, 1.25vw, 22px); }
+  .status { font-size: clamp(15px, 1vw, 18px); }
+  .section-title h2 { font-size: clamp(25px, 1.8vw, 32px); }
+  .card { flex-basis: clamp(250px, 19vw, 340px); min-height: 185px; padding: 26px; }
+  .card h3 { font-size: clamp(20px, 1.5vw, 27px); }
+  .card p, .continue-card p { font-size: clamp(14px, 1vw, 18px); }
+  .continue-card { flex-basis: clamp(275px, 21vw, 370px); min-height: 190px; padding: 25px; }
+  .channel-card { flex-basis: clamp(230px, 17vw, 300px); min-height: 220px; }
+  .channel-card img { width: 90px; height: 90px; }
+  .channel-card h3 { font-size: clamp(17px, 1.2vw, 21px); }
+  .action-button { font-size: 16px; padding: 14px 22px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .card, .continue-card, .channel-card, .action-button { transition: none; }
 }
 </style>
 </head>
@@ -352,20 +389,62 @@ function desconectarYouTube() {
   atualizarStatus("Conta desconectada deste site.");
 }
 
-// Navegação básica pelo controle remoto
-document.addEventListener("keydown", function(e) {
-  const cards = [...document.querySelectorAll(".card, .continue-card, .channel-card, .action-button:not(.hidden)")];
-  const atual = cards.indexOf(document.activeElement);
-  if (e.key === "ArrowRight" && atual >= 0) {
-    e.preventDefault(); cards[Math.min(atual + 1, cards.length - 1)]?.focus();
+// Navegação espacial pelo controle remoto (setas e OK/Enter)
+(function configurarControleRemoto() {
+  const seletor = '.card[tabindex="0"], .continue-card[tabindex="0"], .channel-card, .action-button:not(.hidden)';
+  function itensVisiveis() {
+    return [...document.querySelectorAll(seletor)].filter(el => {
+      const r = el.getBoundingClientRect();
+      return r.width > 0 && r.height > 0 && getComputedStyle(el).visibility !== 'hidden';
+    });
   }
-  if (e.key === "ArrowLeft" && atual >= 0) {
-    e.preventDefault(); cards[Math.max(atual - 1, 0)]?.focus();
+  function focar(el) {
+    if (!el) return;
+    el.focus({ preventScroll: true });
+    el.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
   }
-  if (e.key === "Enter" && atual >= 0 && document.activeElement.tagName !== "A") {
-    document.activeElement.click();
-  }
-});
+  document.addEventListener('keydown', function(e) {
+    const tecla = e.key;
+    if (!['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(tecla)) return;
+    const itens = itensVisiveis();
+    if (!itens.length) return;
+    e.preventDefault();
+    const atual = document.activeElement;
+    if (!itens.includes(atual)) {
+      focar(itens[0]);
+      return;
+    }
+    const a = atual.getBoundingClientRect();
+    const ax = a.left + a.width / 2;
+    const ay = a.top + a.height / 2;
+    let melhor = null;
+    let menorPontuacao = Infinity;
+    for (const candidato of itens) {
+      if (candidato === atual) continue;
+      const r = candidato.getBoundingClientRect();
+      const dx = (r.left + r.width / 2) - ax;
+      const dy = (r.top + r.height / 2) - ay;
+      const naDirecao = tecla === 'ArrowRight' ? dx > 8 :
+        tecla === 'ArrowLeft' ? dx < -8 :
+        tecla === 'ArrowDown' ? dy > 8 : dy < -8;
+      if (!naDirecao) continue;
+      const principal = (tecla === 'ArrowLeft' || tecla === 'ArrowRight') ? Math.abs(dx) : Math.abs(dy);
+      const lateral = (tecla === 'ArrowLeft' || tecla === 'ArrowRight') ? Math.abs(dy) : Math.abs(dx);
+      const pontuacao = principal + lateral * 2.2;
+      if (pontuacao < menorPontuacao) {
+        menorPontuacao = pontuacao;
+        melhor = candidato;
+      }
+    }
+    if (melhor) focar(melhor);
+  });
+  window.addEventListener('load', () => {
+    const primeiro = document.querySelector('.card[tabindex="0"]');
+    if (primeiro && window.matchMedia('(min-width: 1000px)').matches) {
+      setTimeout(() => focar(primeiro), 250);
+    }
+  });
+})();
 </script>
 </body>
 </html>

@@ -1,0 +1,334 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TCL Vision</title>
+
+<style>
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  color: #292d32;
+  background: linear-gradient(135deg, #ffffff, #f0f1f3);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+header {
+  height: 100px;
+  padding: 28px 5%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.logo {
+  font-size: 30px;
+  font-weight: 800;
+  letter-spacing: 2px;
+}
+
+.logo span {
+  color: #858b94;
+  font-weight: 400;
+}
+
+nav {
+  display: flex;
+  gap: 35px;
+  color: #737982;
+  font-size: 16px;
+}
+
+nav span.active {
+  color: #20242a;
+  font-weight: bold;
+  border-bottom: 2px solid #777e88;
+  padding-bottom: 8px;
+}
+
+main {
+  padding: 20px 5% 60px;
+}
+
+.welcome {
+  margin-bottom: 36px;
+}
+
+.welcome h1 {
+  font-size: 32px;
+  margin-bottom: 9px;
+}
+
+.welcome p {
+  color: #858b94;
+  font-size: 16px;
+}
+
+.section {
+  margin-bottom: 42px;
+}
+
+.section-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.section-title h2 {
+  font-size: 23px;
+  font-weight: 700;
+}
+
+.section-title small {
+  color: #8b919a;
+}
+
+.cards {
+  display: flex;
+  gap: 18px;
+  overflow-x: auto;
+  padding: 8px 5px 18px;
+  scrollbar-width: none;
+}
+
+.cards::-webkit-scrollbar {
+  display: none;
+}
+
+.card {
+  flex: 0 0 235px;
+  height: 145px;
+  border-radius: 15px;
+  background: linear-gradient(145deg, #ffffff, #e9ebee);
+  border: 1px solid #e0e2e5;
+  box-shadow: 0 5px 18px #0000000b;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  cursor: pointer;
+  transition: .2s;
+}
+
+.card:focus,
+.card:hover,
+.card.selected {
+  outline: 3px solid #777e88;
+  transform: scale(1.025);
+}
+
+.card .number {
+  font-size: 13px;
+  color: #a0a5ac;
+}
+
+.card h3 {
+  font-size: 19px;
+}
+
+.card p {
+  font-size: 13px;
+  color: #858b94;
+}
+
+.card.featured {
+  background: linear-gradient(145deg, #ffffff, #e2e5e9);
+}
+
+.card.connect {
+  background: #e9ebee;
+  border-style: dashed;
+  align-items: center;
+  text-align: center;
+  justify-content: center;
+  gap: 12px;
+}
+
+.card.connect .plus {
+  font-size: 30px;
+  color: #747b85;
+}
+
+.continue-card {
+  flex: 0 0 260px;
+  height: 150px;
+  border-radius: 15px;
+  padding: 20px;
+  background: #e9ebee;
+  border: 1px solid #dfe1e5;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 10px;
+  cursor: pointer;
+}
+
+.continue-card:focus,
+.continue-card:hover,
+.continue-card.selected {
+  outline: 3px solid #777e88;
+  transform: scale(1.025);
+}
+
+.continue-card p {
+  font-size: 13px;
+  color: #858b94;
+}
+
+footer {
+  padding: 20px 5%;
+  color: #9a9fa6;
+  font-size: 12px;
+  border-top: 1px solid #e4e6e9;
+}
+
+@media(max-width:700px) {
+  header { height: auto; flex-wrap: wrap; gap: 20px; }
+  nav { gap: 15px; font-size: 13px; }
+  .welcome h1 { font-size: 25px; }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <div class="logo">TCL <span>VISION</span></div>
+  <nav>
+    <span class="active">Início</span>
+    <span>Destaques</span>
+    <span>Explorar</span>
+  </nav>
+</header>
+
+<main>
+
+  <div class="welcome">
+    <h1>Bem-vindo à sua TCL Vision</h1>
+    <p>Seu entretenimento, do seu jeito.</p>
+  </div>
+
+  <section class="section">
+    <div class="section-title">
+      <h2>Destaques</h2>
+      <small>Seus favoritos primeiro</small>
+    </div>
+
+    <div class="cards">
+
+      <div class="card featured" tabindex="0"
+      onclick="buscar('Seus canais favoritos do YouTube')">
+        <span class="number">01 · FAVORITO</span>
+        <h3>Seu canal favorito</h3>
+        <p>Conteúdos do YouTube</p>
+      </div>
+
+      <div class="card featured" tabindex="0"
+      onclick="buscar('Canais inscritos no YouTube')">
+        <span class="number">02 · FAVORITO</span>
+        <h3>Seus canais</h3>
+        <p>Explore suas inscrições</p>
+      </div>
+
+      <div class="card featured" tabindex="0"
+      onclick="buscar('Vídeos populares YouTube')">
+        <span class="number">03 · DESTAQUE</span>
+        <h3>Em destaque</h3>
+        <p>Descubra novos vídeos</p>
+      </div>
+
+      <div class="card connect" tabindex="0"
+      onclick="buscar('YouTube')">
+        <span class="plus">+</span>
+        <h3>Conectar YouTube</h3>
+        <p>Preparar integração</p>
+      </div>
+
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-title">
+      <h2>Continue assistindo</h2>
+      <small>Explorar conteúdos</small>
+    </div>
+
+    <div class="cards">
+
+      <div class="continue-card" tabindex="0"
+      onclick="buscar('Filmes e séries YouTube')">
+        <h3>Filmes e séries</h3>
+        <p>Explore conteúdos</p>
+      </div>
+
+      <div class="continue-card" tabindex="0"
+      onclick="buscar('Documentários YouTube')">
+        <h3>Documentários</h3>
+        <p>Conhecimento e descoberta</p>
+      </div>
+
+      <div class="continue-card" tabindex="0"
+      onclick="buscar('Música YouTube')">
+        <h3>Música</h3>
+        <p>Seus conteúdos musicais</p>
+      </div>
+
+      <div class="continue-card" tabindex="0"
+      onclick="buscar('Esportes YouTube')">
+        <h3>Esportes</h3>
+        <p>Explore o mundo esportivo</p>
+      </div>
+
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  TCL VISION · Sua experiência de entretenimento personalizada
+</footer>
+
+<script>
+function buscar(termo) {
+  window.open(
+    'https://www.youtube.com/results?search_query=' +
+    encodeURIComponent(termo),
+    '_blank'
+  );
+}
+
+// Navegação básica pelo controle remoto
+document.addEventListener('keydown', function(e) {
+  const cards = [...document.querySelectorAll(
+    '.card, .continue-card'
+  )];
+
+  let atual = cards.indexOf(document.activeElement);
+
+  if (e.key === 'ArrowRight') {
+    e.preventDefault();
+    cards[Math.min(atual + 1, cards.length - 1)].focus();
+  }
+
+  if (e.key === 'ArrowLeft') {
+    e.preventDefault();
+    cards[Math.max(atual - 1, 0)].focus();
+  }
+
+  if (e.key === 'Enter' && atual >= 0) {
+    document.activeElement.click();
+  }
+});
+</script>
+
+</body>
+</html>

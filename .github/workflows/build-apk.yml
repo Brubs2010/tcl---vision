@@ -1,6 +1,9 @@
 name: Build TCL Vision APK
 
 on:
+  push:
+    branches:
+      - redesign/tcl-vision-home
   workflow_dispatch:
 
 jobs:

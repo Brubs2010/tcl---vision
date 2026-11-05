@@ -16,7 +16,7 @@ jobs:
 
       - name: Extrair projeto Android
         run: |
-          unzip -q TCL-Vision-Android-atualizado.zip -d android-temp
+          unzip -q TCL-Vision-Android-refinado.zip -d android-temp
           PROJECT=$(find android-temp -name settings.gradle -printf '%h\n' | head -n 1)
           echo "PROJECT_DIR=$PROJECT" >> "$GITHUB_ENV"
 

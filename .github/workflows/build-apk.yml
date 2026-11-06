@@ -1,4 +1,4 @@
-name: Build TCL Vision APK
+name: Build Liquid Glass TV APK
 
 on:
   push:
@@ -9,15 +9,18 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
       - name: Baixar projeto
         uses: actions/checkout@v4
 
       - name: Extrair projeto Android
         run: |
-          unzip -q TCL-Vision-Android-2.3-controle-fluido.zip -d android-temp
-          PROJECT=$(find android-temp -name settings.gradle -printf '%h\n' | head -n 1)
+          mkdir -p android-temp
+          ZIP=$(find . -maxdepth 1 -name 'TCL-Vision-Android-2.3-controle-fluido*.zip' | head -n 1)
+          test -n "$ZIP" || exit 1
+          unzip -q "$ZIP" -d android-temp
+          PROJECT=$(find android-temp \( -name settings.gradle -o -name settings.gradle.kts \) -printf '%h\n' | head -n 1)
+          test -n "$PROJECT" || exit 1
           echo "PROJECT_DIR=$PROJECT" >> "$GITHUB_ENV"
 
       - name: Configurar Java
@@ -42,14 +45,14 @@ jobs:
           SIGNING_KEY_PASSWORD: ${{ secrets.SIGNING_KEY_PASSWORD }}
         run: |
           echo "$SIGNING_KEYSTORE_BASE64" | base64 --decode > "$RUNNER_TEMP/tcl-vision.jks"
-          APK=$(find android-temp -path '*/build/outputs/apk/debug/*.apk' -type f | head -n 1)
+          APK=$(find android-temp -path '*/build/outputs/apk/*/*.apk' -type f | head -n 1)
           BUILD_TOOLS=$(find "$ANDROID_HOME/build-tools" -mindepth 1 -maxdepth 1 -type d | sort -V | tail -n 1)
           "$BUILD_TOOLS/zipalign" -f 4 "$APK" "$RUNNER_TEMP/aligned.apk"
-          "$BUILD_TOOLS/apksigner" sign --ks "$RUNNER_TEMP/tcl-vision.jks" --ks-key-alias "$SIGNING_KEY_ALIAS" --ks-pass env:SIGNING_KEYSTORE_PASSWORD --key-pass env:SIGNING_KEY_PASSWORD --out "$RUNNER_TEMP/TCL-Vision.apk" "$RUNNER_TEMP/aligned.apk"
-          "$BUILD_TOOLS/apksigner" verify --verbose "$RUNNER_TEMP/TCL-Vision.apk"
+          "$BUILD_TOOLS/apksigner" sign --ks "$RUNNER_TEMP/tcl-vision.jks" --ks-key-alias "$SIGNING_KEY_ALIAS" --ks-pass env:SIGNING_KEYSTORE_PASSWORD --key-pass env:SIGNING_KEY_PASSWORD --out "$RUNNER_TEMP/Liquid-Glass-TV.apk" "$RUNNER_TEMP/aligned.apk"
+          "$BUILD_TOOLS/apksigner" verify --verbose "$RUNNER_TEMP/Liquid-Glass-TV.apk"
 
       - name: Disponibilizar APK
         uses: actions/upload-artifact@v4
         with:
-          name: TCL-Vision-APK
-          path: ${{ runner.temp }}/TCL-Vision.apk
+          name: Liquid-Glass-TV-APK
+          path: ${{ runner.temp }}/Liquid-Glass-TV.apk
